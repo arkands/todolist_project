@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 10px; }
+        .task-done { text-decoration: line-through; color: gray; }
+        form { margin-top: 20px; }
+        input[type="text"] { padding: 8px; width: 300px; }
+        input[type="submit"] { padding: 8px 12px; }
+    </style>
+</head>
+<body>
+    <h1>To-Do List</h1>
+
+    <ul>
+        {% for task in tasks %}
+            <li class="{% if task.completed %}task-done{% endif %}">
+                {{ task.title }} - {% if task.completed %}Selesai{% else %}Belum{% endif %}
+            </li>
+        {% empty %}
+            <li>Tidak ada tugas</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Tambah Tugas Baru</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Tambah">
+    </form>
+</body>
+</html>
