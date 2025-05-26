@@ -20,6 +20,7 @@
         {% for task in tasks %}
             <li class="{% if task.completed %}task-done{% endif %}">
                 {{ task.title }} - {% if task.completed %}Selesai{% else %}Belum{% endif %}
+                <a href="{% url 'delete_task' task.id %}" onclick="return confirm('Yakin mau hapus?')">Hapus</a>
             </li>
         {% empty %}
             <li>Tidak ada tugas</li>
