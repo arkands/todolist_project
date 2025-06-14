@@ -1,0 +1,31 @@
+{% extends 'todolist/base.html' %}
+
+{% block title %}To-Do List{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto space-y-6">
+
+  <form method="post" class="flex gap-2">
+    {% csrf_token %}
+    {{ form.title }}
+    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Tambah</button>
+  </form>
+
+  <ul class="space-y-2">
+    {% for task in tasks %}
+      <li class="flex justify-between items-center p-3 border rounded shadow-sm bg-white dark:bg-gray-800 {% if task.completed %}line-through text-gray-400{% endif %}">
+        <span>{{ task.title }}</span>
+        <div class="space-x-3">
+          {% if not task.completed %}
+            <a href="{% url 'complete_task' task.id %}" class="text-green-600 hover:underline">✔️</a>
+          {% endif %}
+          <a href="{% url 'delete_task' task.id %}" onclick="return confirm('Mang ea pen di hapus?')" class="text-red-600 hover:underline">🗑️</a>
+        </div>
+      </li>
+    {% empty %}
+      <li class="text-center text-gray-500">Tidak ada tugas</li>
+    {% endfor %}
+  </ul>
+
+</div>
+{% endblock %}
