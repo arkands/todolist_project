@@ -1,50 +1,54 @@
 {% extends 'todolist/base.html' %}
 
-{% block title %}To-Do List{% endblock %}
+{% block title %}To Do list{% endblock %}
 
 {% block content %}
-<div class="max-w-xl mx-auto space-y-6">
+<div class="max-w-xl mx-auto px-4 py-8 space-y-6">
 
-  <form method="post" class="mt-6 flex justify-center items-center gap-2">
+  <!-- Judul -->
+  <h1 class="text-2xl font-bold text-center text-gray-800 dark:text-white">📝 To-Do List</h1>
+
+  <!-- Form Tambah Tugas -->
+  <form method="post" class="flex flex-col sm:flex-row gap-3 items-center justify-center">
     {% csrf_token %}
     {{ form.title }}
-    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Tambah</button>
+    {{ form.deadline }}
+    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Tambah</button>
   </form>
-  <div class="flex justify-center gap-4 mb-4 text-sm font-medium">
-    <a href="{% url 'task_list' %}" class="text-blue-600 hover:underline"> Semua</a>
-    <a href="{% url 'task_filter' 'selesai' %}" class="text-green-600 hover:underline"> Selesai</a>
-    <a href="{% url 'task_filter' 'belum' %}" class="text-red-600 hover:underline"> Belum</a>
+
+  <!-- Filter Tombol -->
+  <div class="flex justify-center gap-4 text-sm font-medium">
+    <a href="{% url 'task_list' %}" class="text-blue-600 hover:underline">📋 Semua</a>
+    <a href="{% url 'task_filter' 'selesai' %}" class="text-green-600 hover:underline">✅ Selesai</a>
+    <a href="{% url 'task_filter' 'belum' %}" class="text-red-600 hover:underline">🕒 Belum</a>
   </div>
-  
-  <ul class="space-y-2">
+
+  <!-- Daftar Tugas -->
+  <ul class="space-y-3">
     {% for task in tasks %}
-    <form method="post" action="{% url 'toggle_task' task.id %}" class="flex items-center gap-2">
-      {% csrf_token %}
-      <input type="checkbox" onchange="this.form.submit()" {% if task.completed %}checked{% endif %}>
-    
-      <span class="{% if task.completed %}line-through text-gray-400{% endif %}">
-        {{ task.title }}
-        {% if task.deadline %}
-          - <span class="{% if task.is_overdue %}text-red-500{% else %}text-gray-500{% endif %}">
-            (Deadline: {{ task.deadline }})
+      <li class="bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center justify-between">
+        <!-- Form Checkbox + Judul -->
+        <form method="post" action="{% url 'toggle_task' task.id %}" class="flex items-center gap-3">
+          {% csrf_token %}
+          <input type="checkbox" onchange="this.form.submit()" {% if task.completed %}checked{% endif %} class="w-5 h-5 accent-indigo-600">
+          <span class="{% if task.completed %}line-through text-gray-400{% else %}text-gray-800 dark:text-gray-200{% endif %}">
+            {{ task.title }}
+            {% if task.deadline %}
+              <span class="{% if task.is_overdue %}text-red-500{% else %}text-gray-500{% endif %} text-sm">
+                ({{ task.deadline }})
+              </span>
+            {% endif %}
           </span>
-        {% endif %}
-      </span>
-    </form>
-    
-    
-      <li class="flex justify-between items-center p-3 border rounded shadow-sm bg-white dark:bg-gray-800 {% if task.completed %}line-through text-gray-400{% endif %}">
-        <span>{{ task.title }}</span>
-        <div class="space-x-3">
-          {% if not task.completed %}
-            <a href="{% url 'complete_task' task.id %}" class="text-green-600 hover:underline"></a>
-          {% endif %}
-          <a href="{% url 'edit_task' task.id %}" class="text-blue-600 hover:underline">✏️</a> <!-- Tombol Edit -->
-          <a href="{% url 'delete_task' task.id %}" onclick="return confirm('Mang ea pen di hapus?')" class="text-red-600 hover:underline">🗑️</a>
+        </form>
+
+        <!-- Aksi -->
+        <div class="space-x-2">
+          <a href="{% url 'edit_task' task.id %}" class="text-blue-500 hover:underline text-sm">✏️</a>
+          <a href="{% url 'delete_task' task.id %}" onclick="return confirm('Mang ea pen di hapus?')" class="text-red-500 hover:underline text-sm">🗑️</a>
         </div>
       </li>
     {% empty %}
-      <li class="text-center text-gray-500">Tidak ada tugas</li>
+      <li class="text-center text-gray-500 dark:text-gray-400">Tidak ada tugas</li>
     {% endfor %}
   </ul>
 
