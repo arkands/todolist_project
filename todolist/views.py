@@ -44,3 +44,15 @@ def task_filter(request, status):
         tasks = Task.objects.all()
     form = TaskForm()
     return render(request, 'todolist/task_list.html', {'tasks': tasks, 'form': form})
+
+def task_filter(request, status):
+    if status == 'selesai':
+        tasks = Task.objects.filter(completed=True)
+    elif status == 'belum':
+        tasks = Task.objects.filter(completed=False)
+    else:
+        tasks = Task.objects.all()
+
+    form = TaskForm()
+    return render(request, 'todolist/task_list.html', {'tasks': tasks, 'form': form})
+
