@@ -56,3 +56,10 @@ def task_filter(request, status):
     form = TaskForm()
     return render(request, 'todolist/task_list.html', {'tasks': tasks, 'form': form})
 
+def toggle_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    task.completed = not task.completed  # Toggle status
+    task.save()
+    return redirect('task_list')
+
+
